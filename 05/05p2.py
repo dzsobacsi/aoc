@@ -3,7 +3,7 @@ ranges = []
 map3d = []
 map = []
 
-with open('sample.txt', 'r') as file:
+with open('input.txt') as file:
     seeds = [int(x) for x in file.readline().split(':')[1].strip().split()]
     for line in file:
         if line[0].isalpha():
@@ -20,11 +20,8 @@ with open('sample.txt', 'r') as file:
 
 
 def convert_num(map, x):
-    print(map)
-    print(x)
     for row in map:
         if x in range(row[1], row[1] + row[2]):
-            print(row[0] + x - row[1])
             return row[0] + x - row[1]
     return x
 
@@ -33,13 +30,15 @@ def convert_rng(map, rng):
     """
     receives a map and a range
     returns a list of ranges
-
-    TODO: handle the situation when rng range is completely outside the map range
     """
     map_ranges = []
     for _, st, ln in map:
         map_ranges.append(range(st, st+ln))
     map_ranges.sort(key=lambda x: x.start)
+    if map_ranges[0].start > 0:
+        map_ranges.insert(0, range(0, map_ranges[0].start))
+    map_ranges.append(range(map_ranges[-1].stop, int(1e20)))
+
     result = []
     for r in map_ranges:
         if rng.start < r.stop and rng.stop > r.start:  # there is any kind of overlap
@@ -54,22 +53,15 @@ def convert_rng(map, rng):
 
 def convert_all(map3d, rng):
     ls_rng = [rng]
-    print(ls_rng)
     for map in map3d:
         ls_rng = [item for row in [convert_rng(map, r) for r in ls_rng] for item in row]
-        print(ls_rng)
     return ls_rng
 
 
 for i in range(0, len(seeds), 2):
     ranges.append(range(seeds[i], seeds[i] + seeds[i+1]))
 
-# print(convert_all(map3d, ranges[0]))
-
-#print(convert_rng(map3d[0], ranges[0]))
-
 result = [item for row in [convert_all(map3d, r) for r in ranges] for item in row]
-print(result)
 result.sort(key=lambda x: x.start)
 
 print(result[0].start)

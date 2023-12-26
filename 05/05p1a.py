@@ -21,7 +21,7 @@ with open('input.txt', 'r') as file:
 def convert(map, x):
     for row in map:
         if x in range(row[1], row[1] + row[2]):
-            return row[0] + x - row[1]
+            return row[0] + (x - row[1])
     return x
 
 
