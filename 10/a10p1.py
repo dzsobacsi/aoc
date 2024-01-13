@@ -1,10 +1,3 @@
-map = []
-
-with open('input.txt') as file:
-    for line in file:
-        map.append(list(line.strip()))
-
-
 def find_starting_position(map):
     for i, row in enumerate(map):
         if 'S' in row:
@@ -60,14 +53,17 @@ def update_position(pos, dir):
         raise ValueError('Wrong direction')
 
 
-start = find_starting_position(map)
-pos = start.copy()
-dir = find_starting_direction(map, pos)
-steps = 0
+if __name__ == '__main__':
+    map = [[ch for ch in line.strip()] for line in open('input.txt').readlines()]
 
-while not (pos == start and steps > 0):
-    pos = update_position(pos, dir)
-    dir = to(map, pos, dir)
-    steps += 1
+    start = find_starting_position(map)
+    pos = start.copy()
+    dir = find_starting_direction(map, pos)
+    steps = 0
 
-print(steps//2)
+    while not (pos == start and steps > 0):
+        pos = update_position(pos, dir)
+        dir = to(map, pos, dir)
+        steps += 1
+
+    print(steps//2)
